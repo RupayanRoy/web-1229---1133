@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forgot Password</title>
+</head>
+<body>
+
+<h2>Forgot Password</h2>
+
+<input type="text" id="username" placeholder="Username">
+<button onclick="sendOTP()">Send OTP</button>
+
+<p id="otpInfo"></p>
+
+<script>
+function sendOTP() {
+    const username = document.getElementById("username").value;
+
+    if (!username) {
+        alert("Please enter username");
+        return;
+    }
+
+    fetch("http://localhost:3000/api/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            alert(data.message);
+            return;
+        }
+
+        // ✅ ALERT SHOWS OTP
+        alert("Your OTP (demo): " + data.otp);
+
+        // save username for next page
+        localStorage.setItem("resetUser", username);
+
+        // ✅ redirect AFTER clicking OK
+        window.location.href = "reset.html";
+    })
+    .catch(err => {
+        alert("Something went wrong");
+        console.error(err);
+    });
+}
+</script>
+<div class="credit-bar">
+  <div class="credit-track">
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das </b>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="universal.css">
+</head>
+<body>
+
+<header>
+    <h2>Student Dashboard</h2>
+</header>
+
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="#">My Profile</a>
+        <a href="#">Attendance</a>
+        <a href="#">Courses</a>
+        <a href="#">Grades</a>
+        <a href="javascript:void(0)" onclick="logout()">Logout</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+
+        <div class="card">
+            <h3>👋 Welcome, Student</h3>
+            <p>You can manage your academic information here.</p>
+        </div>
+
+        <div class="card">
+            <h3>My Profile</h3>
+            <p id="profileInfo"></p>
+        </div>
+
+        <div class="card">
+            <h3>Attendance</h3>
+            <p>Overall Attendance: <strong>85%</strong></p>
+        </div>
+
+        <div class="card">
+    <h3>My Marks</h3>
+    <ul id="marksList"></ul>
+
+    <!-- SHARE BUTTON -->
+    <button class="share-btn" onclick="openShareModal()">
+        📤 Share My Marks
+    </button>
+    </div>
+
+        <div class="card">
+            <h3>Grades</h3>
+            <p>Math: A<br>Science: B+</p>
+        </div>
+
+    </div>
+</div>
+<div class="card follow-card">
+    <h3>❤️ Enjoying this website?</h3>
+    <p>Follow the developer for more cool projects!</p>
+
+    <div class="follow-buttons">
+        <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
+            📸 Instagram
+        </a>
+
+        <a href="https://github.com/RupayanRoy" target="_blank">
+            🐦 Github
+        </a>
+
+        <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
+            💼 LinkedIn
+        </a>
+    </div>
+</div>
+
+
+<!-- AUTH CHECK -->
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("Unauthorized access. Please login.");
+    window.location.href = "login.html";
+}
+</script>
+
+<!-- FETCH USER DATA ONCE -->
+<script>
+fetch("http://localhost:3000/api/me", {
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+})
+.then(res => res.json())
+.then(user => {
+    // Profile
+    document.getElementById("profileInfo").innerHTML = `
+        <strong>Username:</strong> ${user.username}<br>
+        <strong>Role:</strong> ${user.role}
+    `;
+
+    // Marks
+    const list = document.getElementById("marksList");
+    list.innerHTML = "";
+    for (let subject in user.marks) {
+        const li = document.createElement("li");
+        li.textContent = `${subject.toUpperCase()}: ${user.marks[subject]}`;
+        list.appendChild(li);
+    }
+});
+</script>
+
+<!-- LOGOUT -->
+<script>
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "login.html";
+}
+</script>
+<!-- Chatbot Button -->
+<div id="chatbot-btn" onclick="toggleChat()">💬</div>
+
+<!-- Chatbot Window -->
+<div id="chatbot">
+    <div class="chat-header">
+        AI Assistant
+        <span onclick="toggleChat()">✖</span>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+        <div class="bot">👋 Hi! How can I help you?</div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Ask me anything..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+<!-- SHARE MODAL -->
+<div id="shareModal" class="share-modal">
+    <div class="share-box">
+        <h3>Share your marks</h3>
+
+        <button onclick="shareLinkedIn()">🔗 LinkedIn</button>
+        <button onclick="shareTwitter()">🐦 Twitter (X)</button>
+        <button onclick="shareInstagram()">📸 Instagram</button>
+
+        <br><br>
+        <button onclick="closeShareModal()">Cancel</button>
+    </div>
+</div>
+
+<script src="chatbot.js"></script>
+<script>
+function openShareModal() {
+    document.getElementById("shareModal").style.display = "flex";
+}
+
+function closeShareModal() {
+    document.getElementById("shareModal").style.display = "none";
+}
+
+function getMarksText() {
+    const marks = document.querySelectorAll("#marksList li");
+    let text = "🎓 My Academic Performance:\n\n";
+
+    marks.forEach(m => {
+        text += m.innerText + "\n";
+    });
+
+    text += "\n#StudentLife #Results #HardWork";
+    return text;
+}
+
+function shareLinkedIn() {
+    const text = encodeURIComponent(getMarksText());
+    window.open(
+        `https://www.linkedin.com/sharing/share-offsite/?text=${text}`,
+        "_blank"
+    );
+}
+
+function shareTwitter() {
+    const text = encodeURIComponent(getMarksText());
+    window.open(
+        `https://twitter.com/intent/tweet?text=${text}`,
+        "_blank"
+    );
+}
+
+function shareInstagram() {
+    const text = getMarksText();
+    navigator.clipboard.writeText(text);
+    alert("Text copied! Paste it in your Instagram post.");
+    window.open("https://www.instagram.com/", "_blank");
+}
+</script>
+<!-- Sliding Credit Footer -->
+<div class="credit-bar">
+  <div class="credit-track">
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+</body>
+</html>

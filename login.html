@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-box {
+            width: 350px;
+            margin: 80px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-box input,
+        .login-box select,
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .login-box button {
+            background-color: #1abc9c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-box button:hover {
+            background-color: #16a085;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2>Student Management System</h2>
+</header>
+
+<div class="login-box">
+    <h2>Login</h2>
+
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <select id="role">
+        <option value="">Select Role</option>
+        <option value="student">Student</option>
+        <option value="faculty">Faculty</option>
+        <option value="parent">Parent</option>
+        <option value="admin">Administrator</option>
+    </select>
+
+    <button onclick="login()">Login</button>
+    <p>
+    <a href="forgot.html">Forgot Password?</a>
+</p>
+
+    <!-- ✅ REGISTER LINK -->
+    <p style="text-align:center; margin-top:15px;">
+        New user?
+        <a href="register.html">Register here</a>
+    </p>
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Administrator Dashboard</title>
+    <link rel="stylesheet" href="universal.css">
+</head>
+
+<body>
+
+<script>
+const token = localStorage.getItem("token");
+const role = localStorage.getItem("role");
+
+if (!token || role !== "admin") {
+    alert("Unauthorized access");
+    window.location.href = "login.html";
+}
+</script>
+
+<header>
+    <h2>Administrator Dashboard</h2>
+</header>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <a href="#">Manage Students</a>
+        <a href="#">Manage Faculty</a>
+        <a href="#">Courses</a>
+        <a href="#">Reports</a>
+        <a href="javascript:void(0)" onclick="logout()">Logout</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+
+        <div class="card">
+            <h3>👋 Welcome, Administrator!</h3>
+            <p>System overview and management controls.</p>
+        </div>
+
+        <div class="card">
+            <h3>📊 Quick Stats</h3>
+            <p>
+                Total Students: <strong>500</strong><br>
+                Total Faculty: <strong>40</strong>
+            </p>
+        </div>
+
+        <!-- USERS TABLE -->
+        <div class="card">
+            <h3>👥 Registered Users</h3>
+
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <button class="btn" onclick="loadUsers()">🔄 Refresh Users</button>
+        </div>
+
+        <!-- FOLLOW CARD -->
+        
+
+    </div>
+</div>
+<div class="card follow-card">
+            <h3>❤️ Enjoying this website?</h3>
+            <p>Follow the developer for more cool projects!</p>
+
+            <div class="follow-buttons">
+                <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
+                    📸 Instagram
+                </a>
+                <a href="https://github.com/RupayanRoy" target="_blank">
+                    🐦 GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
+                    💼 LinkedIn
+                </a>
+            </div>
+        </div>
+<!-- CHATBOT -->
+<div id="chatbot-btn" onclick="toggleChat()">💬</div>
+
+<div id="chatbot">
+    <div class="chat-header">
+        AI Assistant
+        <span onclick="toggleChat()">✖</span>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+        <div class="bot">👋 Hi! How can I help you?</div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Ask me anything..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script src="chatbot.js"></script>
+
+
+
+<script>
+function logout() {
+    localStorage.clear();
+    window.location.replace("login.html");
+}
+
+function loadUsers() {
+    fetch("http://localhost:3000/api/users")
+        .then(res => {
+            if (!res.ok) throw new Error("Failed");
+            return res.json();
+        })
+        .then(users => {
+            const tbody = document.querySelector("#usersTable tbody");
+            tbody.innerHTML = "";
+
+            users.forEach((user, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.username}</td>
+                    <td>${user.role}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        })
+        .catch(err => {
+            alert("Failed to load users");
+            console.error(err);
+        });
+}
+
+// Auto-load users on page load
+loadUsers();
+</script>
+<!-- Sliding Credit Footer -->
+<div class="credit-bar">
+  <div class="credit-track">
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das </b>
+  </div>
+</div>
+
+</body>
+</html>

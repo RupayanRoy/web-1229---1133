@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reset Password</title>
+</head>
+<body>
+
+<h2>Reset Password</h2>
+
+<input type="text" id="otp" placeholder="Enter OTP">
+<input type="password" id="newPassword" placeholder="New Password">
+<input type="password" id="confirmPassword" placeholder="Confirm Password">
+
+<button onclick="resetPassword()">Reset</button>
+
+<script>
+function resetPassword() {
+    const otp = document.getElementById("otp").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const username = localStorage.getItem("resetUser");
+
+    if (newPassword !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+    }
+
+    fetch("http://localhost:3000/api/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, otp, newPassword })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) {
+            localStorage.removeItem("resetUser");
+            window.location.href = "login.html";
+        }
+    });
+}
+</script>
+<div class="credit-bar">
+  <div class="credit-track">
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das </b>
+  </div>
+</div>
+</body>
+</html>

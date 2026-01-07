@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="universal.css">
+</head>
+<body>
+
+<header>
+    <h2>Student Management System - Register</h2>
+</header>
+<div id="credit-toast">
+    👋 Hi! This website is developed by <strong>Rupayan Roy</strong><br>
+    🎨 Designed by <strong>Monalisa Das Roy</strong>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h3>Create Account</h3>
+<div id="childField" style="display:none;">
+    <input type="text" id="child" placeholder="Child Username (for parent)">
+</div>
+
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+
+    <select id="role" onchange="toggleChildField()">
+            <option value="">Select Role</option>
+            <option value="student">Student</option>
+            <option value="faculty">Faculty</option>
+            <option value="parent">Parent</option>
+            <option value="admin">Administrator</option>
+        </select>
+
+        <button onclick="register()">Register</button>
+
+        <p>
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+    </div>
+</div>
+
+<script src="register.js"></script>
+<script>
+function toggleChildField() {
+    const role = document.getElementById("role").value;
+    const childField = document.getElementById("childField");
+
+    if (role === "parent") {
+        childField.style.display = "block";
+    } else {
+        childField.style.display = "none";
+    }
+}
+</script>
+<div class="credit-bar">
+  <div class="credit-track">
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das </b>
+  </div>
+</div>
+</body>
+</html>

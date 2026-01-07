@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faculty Dashboard</title>
+    <link rel="stylesheet" href="universal.css">
+</head>
+<body>
+<header>
+    <h2>Faculty Dashboard</h2>
+</header>
+
+
+<div class="container">
+    <div class="sidebar">
+        <a href="#">My Classes</a>
+        <a href="#">Take Attendance</a>
+        <a href="#">Upload Marks</a>
+        <a href="#">Student List</a>
+<a href="javascript:void(0)" onclick="logout()">Logout</a>
+    </div>
+    <div class="content">
+        <div class="card">
+            <h3>Welcome, Faculty Member!</h3>
+            <p>Manage your classes and students here.</p>
+        </div>
+        <div class="card">
+            <h3>Today's Classes</h3>
+            <p>CS101 - 10:00 AM</p>
+        </div>
+    </div>
+</div>
+<div class="card follow-card">
+    <h3>❤️ Enjoying this website?</h3>
+    <p>Follow the developer for more cool projects!</p>
+
+    <div class="follow-buttons">
+        <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
+            📸 Instagram
+        </a>
+
+        <a href="https://github.com/RupayanRoy" target="_blank">
+            🐦 Github
+        </a>
+
+        <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
+            💼 LinkedIn
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Update Student Marks</h3>
+    <input type="text" id="studentUsername" placeholder="Student Username">
+    <select id="subject">
+        <option value="math">Math</option>
+        <option value="science">Science</option>
+        <option value="english">English</option>
+    </select>
+    <input type="number" id="marks" placeholder="Marks">
+    <button onclick="updateMarks()">Update Marks</button>
+</div>
+<script>
+const token = localStorage.getItem("token");
+
+if (!token) {
+    alert("Unauthorized access. Please login.");
+    window.location.href = "login.html";
+}
+</script>
+<script>
+function logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    window.location.href = "login.html";
+}
+</script>
+<script>
+function updateMarks() {
+    fetch("http://localhost:3000/api/marks", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            studentUsername: document.getElementById("studentUsername").value,
+            subject: document.getElementById("subject").value,
+            marks: document.getElementById("marks").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert(data.message));
+}
+</script>
+<!-- Chatbot Button -->
+<div id="chatbot-btn" onclick="toggleChat()">💬</div>
+
+<!-- Chatbot Window -->
+<div id="chatbot">
+    <div class="chat-header">
+        AI Assistant
+        <span onclick="toggleChat()">✖</span>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+        <div class="bot">👋 Hi! How can I help you?</div>
+    </div>
+
+    <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Ask me anything..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+<script src="chatbot.js"></script>
+<!-- Floating Credit Toast -->
+<div id="credit-toast" class="toast">
+  👋 Hi! This website is developed by <b>Rupayan Roy</b><br>
+  🎨 Designed by <b>Monalisa Das Roy</b>
+</div>
+
+<!-- Sliding Credit Footer -->
+<div class="credit-bar">
+  <div class="credit-track">
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das Roy</b>
+    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
+    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
+    🎨 Designed by <b>Monalisa Das </b>
+  </div>
+</div>
+
+
+
+</body>
+</html>
+
+</body>
+</html>
