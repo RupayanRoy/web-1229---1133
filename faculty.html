@@ -1,137 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faculty Dashboard</title>
     <link rel="stylesheet" href="universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
 <header>
     <h2>Faculty Dashboard</h2>
 </header>
 
-
 <div class="container">
     <div class="sidebar">
-        <a href="#">My Classes</a>
+        <a href="#" class="active">My Classes</a>
         <a href="#">Take Attendance</a>
         <a href="#">Upload Marks</a>
         <a href="#">Student List</a>
-<a href="javascript:void(0)" onclick="logout()">Logout</a>
+        <a href="javascript:void(0)" onclick="logout()">Logout</a>
     </div>
+
     <div class="content">
-        <div class="card">
-            <h3>Welcome, Faculty Member!</h3>
-            <p>Manage your classes and students here.</p>
+        <div class="card hero-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #6366f1, #a855f7); color: white;">
+            <h3 style="color: white;">👋 Welcome, Faculty Member!</h3>
+            <p style="opacity: 0.9;">Manage your classes, students, and academic records efficiently from here.</p>
         </div>
+
         <div class="card">
-            <h3>Today's Classes</h3>
-            <p>CS101 - 10:00 AM</p>
+            <h3>📅 Today's Classes</h3>
+            <ul class="class-list" style="list-style: none; padding: 0;">
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><strong>CS101</strong> - 10:00 AM</li>
+                <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><strong>DS202</strong> - 02:00 PM</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>📊 Update Student Marks</h3>
+            <div class="form-group" style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                <input type="text" id="studentUsername" placeholder="Student Username" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                <select id="subject" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                    <option value="math">Math</option>
+                    <option value="science">Science</option>
+                    <option value="english">English</option>
+                </select>
+                <input type="number" id="marks" placeholder="Marks" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                <button onclick="updateMarks()" style="background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                    🚀 Update Marks
+                </button>
+            </div>
+        </div>
+
+        <div class="card follow-card" style="grid-column: 1 / -1; text-align: center; max-width: 600px; margin: 20px auto;">
+            <h3>❤️ Enjoying this website?</h3>
+            <p>Follow the developer for more cool projects!</p>
+            <div class="follow-buttons" style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 10px 20px; border-radius: 50px; color: #1e293b; font-weight: 600;">📸 Instagram</a>
+                <a href="https://github.com/RupayanRoy" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 10px 20px; border-radius: 50px; color: #1e293b; font-weight: 600;">🐦 Github</a>
+                <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 10px 20px; border-radius: 50px; color: #1e293b; font-weight: 600;">💼 LinkedIn</a>
+            </div>
         </div>
     </div>
 </div>
-<div class="card follow-card">
-    <h3>❤️ Enjoying this website?</h3>
-    <p>Follow the developer for more cool projects!</p>
 
-    <div class="follow-buttons">
-        <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
-            📸 Instagram
-        </a>
-
-        <a href="https://github.com/RupayanRoy" target="_blank">
-            🐦 Github
-        </a>
-
-        <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
-            💼 LinkedIn
-        </a>
+<div id="chatbot-btn" onclick="toggleChat()">💬</div>
+<div id="chatbot" style="position: fixed; bottom: 140px; right: 25px; width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 999; overflow: hidden;">
+    <div class="chat-header" style="background: #6366f1; color: white; padding: 15px; display: flex; justify-content: space-between;">
+        <span>🤖 AI Assistant</span>
+        <span onclick="toggleChat()" style="cursor:pointer">✖</span>
+    </div>
+    <div class="chat-body" id="chatBody" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc;">
+        <div class="bot">👋 Hi Faculty! How can I assist you with your students today?</div>
+    </div>
+    <div class="chat-input" style="display: flex; border-top: 1px solid #eee; padding: 10px;">
+        <input type="text" id="chatInput" placeholder="Ask me anything..." style="flex: 1; border: none; padding: 10px; outline: none;"/>
+        <button onclick="sendMessage()" style="background: #6366f1; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer;">Send</button>
     </div>
 </div>
 
-<div class="card">
-    <h3>Update Student Marks</h3>
-    <input type="text" id="studentUsername" placeholder="Student Username">
-    <select id="subject">
-        <option value="math">Math</option>
-        <option value="science">Science</option>
-        <option value="english">English</option>
-    </select>
-    <input type="number" id="marks" placeholder="Marks">
-    <button onclick="updateMarks()">Update Marks</button>
+<div class="credit-bar" style="position: fixed; bottom: 0; left: 0; width: 100%; height: 40px; background: #0f172a; color: white; display: flex; align-items: center; overflow: hidden; white-space: nowrap; z-index: 9999;">
+    <div class="credit-track" style="display: inline-block; animation: marquee 20s linear infinite;">
+        <span>🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b></span>
+    </div>
 </div>
+
+<script src="chatbot.js"></script>
 <script>
+// AUTH CHECK
 const token = localStorage.getItem("token");
-
 if (!token) {
     alert("Unauthorized access. Please login.");
     window.location.href = "login.html";
 }
-</script>
-<script>
+
+// LOGOUT
 function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    localStorage.clear();
     window.location.href = "login.html";
 }
-</script>
-<script>
+
+// UPDATE MARKS
 function updateMarks() {
+    const student = document.getElementById("studentUsername").value;
+    const sub = document.getElementById("subject").value;
+    const val = document.getElementById("marks").value;
+
+    if(!student || !val) {
+        alert("Please fill all fields");
+        return;
+    }
+
     fetch("http://localhost:3000/api/marks", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            studentUsername: document.getElementById("studentUsername").value,
-            subject: document.getElementById("subject").value,
-            marks: document.getElementById("marks").value
+            studentUsername: student,
+            subject: sub,
+            marks: val
         })
     })
     .then(res => res.json())
     .then(data => alert(data.message));
 }
+
+// CHATBOT TOGGLE
+function toggleChat() {
+    const chat = document.getElementById("chatbot");
+    chat.style.display = (chat.style.display === "flex") ? "none" : "flex";
+}
 </script>
-<!-- Chatbot Button -->
-<div id="chatbot-btn" onclick="toggleChat()">💬</div>
-
-<!-- Chatbot Window -->
-<div id="chatbot">
-    <div class="chat-header">
-        AI Assistant
-        <span onclick="toggleChat()">✖</span>
-    </div>
-
-    <div class="chat-body" id="chatBody">
-        <div class="bot">👋 Hi! How can I help you?</div>
-    </div>
-
-    <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Ask me anything..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
-<script src="chatbot.js"></script>
-<!-- Floating Credit Toast -->
-<div id="credit-toast" class="toast">
-  👋 Hi! This website is developed by <b>Rupayan Roy</b><br>
-  🎨 Designed by <b>Monalisa Das Roy</b>
-</div>
-
-<!-- Sliding Credit Footer -->
-<div class="credit-bar">
-  <div class="credit-track">
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das Roy</b>
-    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das </b>
-  </div>
-</div>
-
-
-
-</body>
-</html>
-
 </body>
 </html>

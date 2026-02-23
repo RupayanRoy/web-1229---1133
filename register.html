@@ -1,67 +1,235 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Student Management System</title>
     <link rel="stylesheet" href="universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="auth-page">
 
 <header>
-    <h2>Student Management System - Register</h2>
+    <h2>Student Management System</h2>
 </header>
-<div id="credit-toast">
-    👋 Hi! This website is developed by <strong>Rupayan Roy</strong><br>
-    🎨 Designed by <strong>Monalisa Das Roy</strong>
+
+<div class="auth-container">
+    <div class="card auth-card">
+        <div class="auth-header">
+            <h3>🚀 Create Account</h3>
+            <p>Join the community and manage your academic life.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="role">I am a...</label>
+            <select id="role" onchange="toggleChildField()">
+                <option value="">Select Role</option>
+                <option value="student">Student</option>
+                <option value="faculty">Faculty</option>
+                <option value="parent">Parent</option>
+                <option value="admin">Administrator</option>
+            </select>
+
+            <div id="childField" class="conditional-input" style="display:none;">
+                <label for="child">Link Child's Account</label>
+                <input type="text" id="child" placeholder="Enter Child's Username">
+                <small>Required for parent accounts to sync marks.</small>
+            </div>
+
+            <label for="username">Choose Username</label>
+            <input type="text" id="username" placeholder="e.g. jdoe2024" required>
+
+            <label for="password">Security Password</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+
+            <button class="btn register-btn" onclick="register()">Create My Account</button>
+        </div>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="login.html">Sign In</a></p>
+        </div>
+    </div>
 </div>
 
-<div class="container">
-    <div class="card">
-        <h3>Create Account</h3>
-<div id="childField" style="display:none;">
-    <input type="text" id="child" placeholder="Child Username (for parent)">
-</div>
-
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-
-    <select id="role" onchange="toggleChildField()">
-            <option value="">Select Role</option>
-            <option value="student">Student</option>
-            <option value="faculty">Faculty</option>
-            <option value="parent">Parent</option>
-            <option value="admin">Administrator</option>
-        </select>
-
-        <button onclick="register()">Register</button>
-
-        <p>
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
+<div class="credit-bar">
+    <div class="credit-track">
+        <span>🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b></span>
     </div>
 </div>
 
 <script src="register.js"></script>
 <script>
+/**
+ * UI Logic for Role-based fields
+ */
 function toggleChildField() {
     const role = document.getElementById("role").value;
     const childField = document.getElementById("childField");
 
     if (role === "parent") {
         childField.style.display = "block";
+        childField.classList.add("fade-in");
     } else {
         childField.style.display = "none";
     }
 }
+
+/**
+ * Enhanced Registration Logic
+ */
+function register() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
+    const child = document.getElementById("child").value;
+
+    if (!username || !password || !role) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    fetch("http://localhost:3000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, role, child })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Registration Successful! Please login.");
+            window.location.href = "login.html";
+        } else {
+            alert(data.message || "Registration failed.");
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Server error. Please try again later.");
+    });
+}
 </script>
-<div class="credit-bar">
-  <div class="credit-track">
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das Roy</b>
-    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das </b>
-  </div>
-</div>
+
+<style>
+/* Page-specific Auth Styling */
+.auth-page {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.auth-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.auth-header h3 {
+    font-size: 1.75rem;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.auth-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+    margin-top: 15px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.register-btn {
+    width: 100%;
+    background: #6366f1;
+    color: white;
+    margin-top: 30px;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.register-btn:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+.conditional-input small {
+    display: block;
+    color: #94a3b8;
+    margin-top: 4px;
+    font-size: 0.75rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+.auth-footer a {
+    color: #6366f1;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
 </body>
 </html>

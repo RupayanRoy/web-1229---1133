@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parent Dashboard</title>
     <link rel="stylesheet" href="universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -11,126 +14,121 @@
 </header>
 
 <div class="container">
-
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <a href="#">Child Profile</a>
+        <a href="#" class="active">Child Profile</a>
         <a href="#">Attendance</a>
         <a href="#">Academic Progress</a>
         <a href="javascript:void(0)" onclick="logout()">Logout</a>
     </div>
 
-    <!-- CONTENT -->
     <div class="content">
-
-        <div class="card">
-            <h3>👋 Welcome, Parent</h3>
-            <p>View your child’s academic performance.</p>
+        <div class="card hero-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #6366f1, #a855f7); color: white;">
+            <h3 style="color: white;">👋 Welcome, Parent!</h3>
+            <p style="opacity: 0.9;">Monitor your child's academic journey and stay updated with their latest achievements.</p>
         </div>
 
         <div class="card">
-            <h3>Child Profile</h3>
-            <p id="childInfo"></p>
+            <h3>👤 Child Profile</h3>
+            <div id="childInfo" class="profile-box" style="margin-top: 15px; line-height: 1.8;">
+                </div>
         </div>
 
         <div class="card">
-            <h3>Child Marks</h3>
-            <ul id="childMarks"></ul>
+            <h3>📅 Attendance</h3>
+            <div class="progress-container" style="background: #e2e8f0; border-radius: 10px; height: 12px; margin: 15px 0;">
+                <div id="attendanceBar" class="progress-bar" style="width: 85%; background: var(--accent); height: 100%; border-radius: 10px;"></div>
+            </div>
+            <p>Overall Attendance: <strong>85%</strong></p>
         </div>
 
+        <div class="card">
+            <h3>📊 Academic Results</h3>
+            <ul id="childMarks" style="list-style: none; padding: 0; margin-top: 15px;">
+                </ul>
+        </div>
+
+        <div class="card follow-card" style="grid-column: 1 / -1; text-align: center; max-width: 600px; margin: 40px auto; padding: 30px;">
+            <h3>❤️ Enjoying this website?</h3>
+            <p style="color: var(--text-muted);">Follow the developer for more cool projects!</p>
+            <div class="follow-buttons" style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
+                <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 12px 24px; border-radius: 50px; color: #1e293b; font-weight: 600; transition: 0.3s;">📸 Instagram</a>
+                <a href="https://github.com/RupayanRoy" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 12px 24px; border-radius: 50px; color: #1e293b; font-weight: 600; transition: 0.3s;">🐦 Github</a>
+                <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 12px 24px; border-radius: 50px; color: #1e293b; font-weight: 600; transition: 0.3s;">💼 LinkedIn</a>
+            </div>
+        </div>
     </div>
 </div>
-<div class="card follow-card">
-    <h3>❤️ Enjoying this website?</h3>
-    <p>Follow the developer for more cool projects!</p>
 
-    <div class="follow-buttons">
-        <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
-            📸 Instagram
-        </a>
-
-        <a href="https://github.com/RupayanRoy" target="_blank">
-            🐦 Github
-        </a>
-
-        <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
-            💼 LinkedIn
-        </a>
+<div id="chatbot-btn" onclick="toggleChat()">💬</div>
+<div id="chatbot" style="position: fixed; bottom: 140px; right: 25px; width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 1001; overflow: hidden;">
+    <div class="chat-header" style="background: #6366f1; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between;">
+        <span>🤖 AI Assistant</span>
+        <span onclick="toggleChat()" style="cursor:pointer">✖</span>
+    </div>
+    <div class="chat-body" id="chatBody" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; font-size: 14px;">
+        <div class="bot">👋 Hi! I'm here to help you navigate your child's academic data.</div>
+    </div>
+    <div class="chat-input" style="display: flex; border-top: 1px solid #eee; padding: 10px;">
+        <input type="text" id="chatInput" placeholder="Ask me anything..." style="flex: 1; border: none; padding: 10px; outline: none;" onkeypress="if(event.key === 'Enter') sendMessage()"/>
+        <button onclick="sendMessage()" style="background: #6366f1; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer;">Send</button>
     </div>
 </div>
 
-<!-- AUTH CHECK -->
+<div class="credit-bar" style="position: fixed; bottom: 0; left: 0; width: 100%; height: 45px; background: #0f172a; color: white; display: flex; align-items: center; overflow: hidden; white-space: nowrap; z-index: 9999;">
+    <div class="credit-track" style="display: inline-block; animation: marquee 25s linear infinite;">
+        <span>🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b></span>
+    </div>
+</div>
+
+<script src="chatbot.js"></script>
 <script>
+// AUTH CHECK
 const token = localStorage.getItem("token");
-
 if (!token) {
     alert("Unauthorized access. Please login.");
     window.location.href = "login.html";
 }
-</script>
 
-<!-- FETCH CHILD DATA -->
-<script>
+// LOGOUT
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+// CHATBOT TOGGLE
+function toggleChat() {
+    const chat = document.getElementById("chatbot");
+    chat.style.display = (chat.style.display === "flex") ? "none" : "flex";
+}
+
+// FETCH CHILD DATA
 fetch("http://localhost:3000/api/child", {
-    headers: {
-        "Authorization": "Bearer " + localStorage.getItem("token")
-    }
+    headers: { "Authorization": "Bearer " + token }
 })
 .then(res => res.json())
 .then(child => {
-    console.log("CHILD DATA:", child); // 👈 ADD THIS
+    // Child Profile Update
     document.getElementById("childInfo").innerHTML = `
-        <strong>Username:</strong> ${child.username}<br>
-        <strong>Role:</strong> student
+        <p><strong>Username:</strong> ${child.username}</p>
+        <p><strong>Student ID:</strong> ${child.username.toUpperCase()}_STD</p>
+        <p><strong>Status:</strong> Active</p>
     `;
 
+    // Academic Results Update
     const list = document.getElementById("childMarks");
     list.innerHTML = "";
-
     for (let subject in child.marks) {
         const li = document.createElement("li");
-        li.textContent = `${subject.toUpperCase()}: ${child.marks[subject]}`;
+        li.style.cssText = "display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;";
+        li.innerHTML = `<span>${subject.toUpperCase()}</span> <strong>${child.marks[subject] || 'N/A'}</strong>`;
         list.appendChild(li);
     }
+})
+.catch(err => {
+    console.error("Error fetching child data:", err);
+    document.getElementById("childInfo").innerText = "Error loading child profile.";
 });
 </script>
 
-<!-- LOGOUT -->
-<script>
-function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    window.location.href = "login.html";
-}
-</script>
-<!-- Chatbot Button -->
-<div id="chatbot-btn" onclick="toggleChat()">💬</div>
-
-<!-- Chatbot Window -->
-<div id="chatbot">
-    <div class="chat-header">
-        AI Assistant
-        <span onclick="toggleChat()">✖</span>
-    </div>
-
-    <div class="chat-body" id="chatBody">
-        <div class="bot">👋 Hi! How can I help you?</div>
-    </div>
-
-    <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Ask me anything..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
-<script src="chatbot.js"></script>
-<div class="credit-bar">
-  <div class="credit-track">
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das Roy</b>
-    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das </b>
-  </div>
-</div>
 </body>
 </html>

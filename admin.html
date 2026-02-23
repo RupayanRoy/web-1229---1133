@@ -1,20 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrator Dashboard</title>
     <link rel="stylesheet" href="universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <script>
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
+    // Strict Auth Check before page render
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
 
-if (!token || role !== "admin") {
-    alert("Unauthorized access");
-    window.location.href = "login.html";
-}
+    if (!token || role !== "admin") {
+        alert("Unauthorized access. Admin privileges required.");
+        window.location.href = "login.html";
+    }
 </script>
 
 <header>
@@ -22,104 +26,107 @@ if (!token || role !== "admin") {
 </header>
 
 <div class="container">
-
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <a href="#">Manage Students</a>
+        <a href="#" class="active">Manage Students</a>
         <a href="#">Manage Faculty</a>
-        <a href="#">Courses</a>
-        <a href="#">Reports</a>
+        <a href="#">System Courses</a>
+        <a href="#">System Reports</a>
         <a href="javascript:void(0)" onclick="logout()">Logout</a>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="content">
-
-        <div class="card">
-            <h3>👋 Welcome, Administrator!</h3>
-            <p>System overview and management controls.</p>
+        <div class="card hero-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #1e293b, #334155); color: white;">
+            <h3 style="color: white;">👋 Welcome, Administrator!</h3>
+            <p style="opacity: 0.8;">Full system access granted. Monitor user activity and manage institutional data below.</p>
         </div>
 
         <div class="card">
-            <h3>📊 Quick Stats</h3>
-            <p>
-                Total Students: <strong>500</strong><br>
-                Total Faculty: <strong>40</strong>
-            </p>
-        </div>
-
-        <!-- USERS TABLE -->
-        <div class="card">
-            <h3>👥 Registered Users</h3>
-
-            <table id="usersTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                        <th>Role</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-            <button class="btn" onclick="loadUsers()">🔄 Refresh Users</button>
-        </div>
-
-        <!-- FOLLOW CARD -->
-        
-
-    </div>
-</div>
-<div class="card follow-card">
-            <h3>❤️ Enjoying this website?</h3>
-            <p>Follow the developer for more cool projects!</p>
-
-            <div class="follow-buttons">
-                <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
-                    📸 Instagram
-                </a>
-                <a href="https://github.com/RupayanRoy" target="_blank">
-                    🐦 GitHub
-                </a>
-                <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
-                    💼 LinkedIn
-                </a>
+            <h3>📊 Quick System Stats</h3>
+            <div style="display: flex; justify-content: space-around; margin-top: 15px; text-align: center;">
+                <div>
+                    <h4 style="font-size: 1.8rem; color: var(--primary);">500</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Total Students</p>
+                </div>
+                <div style="border-left: 1px solid #e2e8f0; padding-left: 20px;">
+                    <h4 style="font-size: 1.8rem; color: var(--accent);">40</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Total Faculty</p>
+                </div>
             </div>
         </div>
-<!-- CHATBOT -->
+
+        <div class="card" style="grid-column: 1 / -1;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>👥 Registered Users</h3>
+                <button class="btn" onclick="loadUsers()" style="margin: 0; padding: 8px 16px;">🔄 Refresh List</button>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card follow-card" style="grid-column: 1 / -1; text-align: center; max-width: 600px; margin: 40px auto; padding: 30px;">
+            <h3>❤️ Enjoying this website?</h3>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Follow the developer for more cool projects!</p>
+            <div class="follow-buttons" style="display: flex; justify-content: center; gap: 15px;">
+                <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 12px 24px; border-radius: 50px; color: #1e293b; font-weight: 600; transition: 0.3s;">📸 Instagram</a>
+                <a href="https://github.com/RupayanRoy" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 12px 24px; border-radius: 50px; color: #1e293b; font-weight: 600; transition: 0.3s;">🐦 GitHub</a>
+                <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank" style="text-decoration: none; background: #f1f5f9; padding: 12px 24px; border-radius: 50px; color: #1e293b; font-weight: 600; transition: 0.3s;">💼 LinkedIn</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="chatbot-btn" onclick="toggleChat()">💬</div>
-
-<div id="chatbot">
-    <div class="chat-header">
-        AI Assistant
-        <span onclick="toggleChat()">✖</span>
+<div id="chatbot" style="position: fixed; bottom: 140px; right: 25px; width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; z-index: 1001; overflow: hidden;">
+    <div class="chat-header" style="background: #1e293b; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between;">
+        <span>🤖 Admin Support</span>
+        <span onclick="toggleChat()" style="cursor:pointer">✖</span>
     </div>
-
-    <div class="chat-body" id="chatBody">
-        <div class="bot">👋 Hi! How can I help you?</div>
+    <div class="chat-body" id="chatBody" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; font-size: 14px;">
+        <div class="bot">👋 System Administrator identified. How can I assist with site management?</div>
     </div>
+    <div class="chat-input" style="display: flex; border-top: 1px solid #eee; padding: 10px;">
+        <input type="text" id="chatInput" placeholder="Type command..." style="flex: 1; border: none; padding: 10px; outline: none;" onkeypress="if(event.key === 'Enter') sendMessage()"/>
+        <button onclick="sendMessage()" style="background: #1e293b; color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer;">Send</button>
+    </div>
+</div>
 
-    <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Ask me anything..." />
-        <button onclick="sendMessage()">Send</button>
+<div class="credit-bar" style="position: fixed; bottom: 0; left: 0; width: 100%; height: 45px; background: #0f172a; color: white; display: flex; align-items: center; overflow: hidden; white-space: nowrap; z-index: 9999;">
+    <div class="credit-track" style="display: inline-block; animation: marquee 25s linear infinite;">
+        <span>🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🚀 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp; 🎨 Designed by <b>Monalisa Das</b></span>
     </div>
 </div>
 
 <script src="chatbot.js"></script>
-
-
-
 <script>
+// --- MANAGEMENT LOGIC ---
+
 function logout() {
     localStorage.clear();
     window.location.replace("login.html");
 }
 
+function toggleChat() {
+    const chat = document.getElementById("chatbot");
+    chat.style.display = (chat.style.display === "flex") ? "none" : "flex";
+}
+
 function loadUsers() {
     fetch("http://localhost:3000/api/users")
         .then(res => {
-            if (!res.ok) throw new Error("Failed");
+            if (!res.ok) throw new Error("Fetch failed");
             return res.json();
         })
         .then(users => {
@@ -128,33 +135,54 @@ function loadUsers() {
 
             users.forEach((user, index) => {
                 const row = document.createElement("tr");
+                row.style.borderBottom = "1px solid #f1f5f9";
                 row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${user.username}</td>
-                    <td>${user.role}</td>
+                    <td style="padding: 15px;">${index + 1}</td>
+                    <td style="padding: 15px; font-weight: 500;">${user.username}</td>
+                    <td style="padding: 15px;"><span class="role-badge ${user.role}">${user.role}</span></td>
+                    <td style="padding: 15px; color: var(--accent);">● Active</td>
                 `;
                 tbody.appendChild(row);
             });
         })
         .catch(err => {
-            alert("Failed to load users");
+            alert("Security Error: Failed to load system user database.");
             console.error(err);
         });
 }
 
-// Auto-load users on page load
-loadUsers();
+// Initializing the system dashboard
+document.addEventListener("DOMContentLoaded", loadUsers);
 </script>
-<!-- Sliding Credit Footer -->
-<div class="credit-bar">
-  <div class="credit-track">
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das Roy</b>
-    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das </b>
-  </div>
-</div>
+
+<style>
+/* Dashboard-specific badges for Admin */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.student { background: #dcfce7; color: #166534; }
+.faculty { background: #fef9c3; color: #854d0e; }
+.parent { background: #dbeafe; color: #1e40af; }
+.admin { background: #fee2e2; color: #991b1b; }
+
+#usersTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+#usersTable th {
+    text-align: left;
+    padding: 15px;
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+</style>
 
 </body>
 </html>

@@ -1,8 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link rel="stylesheet" href="universal.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Modern SPA View Styling */
+        .page-view { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .nav-item.active { background: #4a90e2; color: white; border-radius: 8px; }
+        
+        /* Attendance & AI Stats */
+        .stat-circle {
+            width: 120px; height: 120px; border-radius: 50%;
+            border: 10px solid #4a90e2; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: bold; margin: 20px auto;
+        }
+        .ai-alert {
+            background: #f0f7ff; border-left: 5px solid #4a90e2;
+            padding: 15px; border-radius: 8px; margin-top: 15px;
+        }
+        .countdown { color: #e53e3e; font-weight: bold; }
+
+        /* Grades Table */
+        .marks-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .marks-table th, .marks-table td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+
+        /* Modal Background */
+        .share-modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; 
+            width: 100%; height: 100%; background: rgba(0,0,0,0.6);
+            align-items: center; justify-content: center;
+        }
+        .share-box { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
+        .share-grid { display: grid; gap: 10px; margin: 20px 0; }
+
+        /* Chatbot Overlay Fixes */
+        #chatbot {
+            display: none; flex-direction: column; position: fixed;
+            bottom: 90px; right: 30px; width: 320px; height: 450px;
+            background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 15px; z-index: 9999; overflow: hidden; border: 1px solid #eee;
+        }
+        #chatbot-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: #4a90e2; color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; z-index: 10000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 <body>
 
@@ -10,209 +60,218 @@
     <h2>Student Dashboard</h2>
 </header>
 
-
 <div class="container">
-
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <a href="#">My Profile</a>
-        <a href="#">Attendance</a>
-        <a href="#">Courses</a>
-        <a href="#">Grades</a>
-        <a href="javascript:void(0)" onclick="logout()">Logout</a>
+        <a href="javascript:void(0)" onclick="showPage('view-profile', this)" class="nav-item active">👤 My Profile</a>
+        <a href="javascript:void(0)" onclick="showPage('view-attendance', this)" class="nav-item">📅 Attendance</a>
+        <a href="javascript:void(0)" onclick="showPage('view-courses', this)" class="nav-item">📚 Courses</a>
+        <a href="javascript:void(0)" onclick="showPage('view-grades', this)" class="nav-item">📊 Grades</a>
+        <a href="javascript:void(0)" onclick="logout()">🚪 Logout</a>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="content">
+        <div id="view-profile" class="page-view">
+            <div class="card hero-card">
+                <h3>👋 Welcome back, <span id="welcomeName">Student</span>!</h3>
+                <div id="liveClassAlert" style="display:none;"></div> </div>
 
-        <div class="card">
-            <h3>👋 Welcome, Student</h3>
-            <p>You can manage your academic information here.</p>
+            <div class="card">
+                <h3>👤 My Profile</h3>
+                <div id="profileInfo" class="profile-box"></div>
+            </div>
+
+            <div class="card upload-card">
+                <h3>📤 Submit Assignment</h3>
+                <form id="uploadForm" enctype="multipart/form-data" class="upload-area">
+                    <label for="assignmentInput" class="file-label">
+                        <span id="file-name">Click to select PDF</span>
+                    </label>
+                    <input type="file" name="assignment" id="assignmentInput" accept="application/pdf" required style="display:none;" />
+                    <div id="progressContainer" style="display: none; width: 100%; background: #e2e8f0; border-radius: 8px; margin: 10px 0;">
+                        <div id="progressBar" style="width: 0%; height: 10px; background: #4a90e2; border-radius: 8px; transition: width 0.3s;"></div>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit to Cloud</button>
+                </form>
+                <p id="uploadStatus"></p>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>My Profile</h3>
-            <p id="profileInfo"></p>
+        <div id="view-attendance" class="page-view" style="display:none;">
+            <div class="card">
+                <h3>📅 Attendance Overview</h3>
+                <div class="stat-circle">85%</div>
+            </div>
+
+            <div class="card">
+                <h3>🤖 AI Schedule Tracker</h3>
+                <p>Upload your timetable photo</p>
+                <input type="file" id="timetableInput" accept="image/*" style="margin: 10px 0;" />
+                <button class="submit-btn" onclick="uploadTimetable()">Analyze Schedule</button>
+                <p id="aiStatus"></p>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>Attendance</h3>
-            <p>Overall Attendance: <strong>85%</strong></p>
+        <div id="view-courses" class="page-view" style="display:none;">
+            <div class="card">
+                <h3>📚 Registered Courses</h3>
+                <ul id="courseList" class="modern-list">
+                    <li>Loading schedule...</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="card">
-    <h3>My Marks</h3>
-    <ul id="marksList"></ul>
-
-    <!-- SHARE BUTTON -->
-    <button class="share-btn" onclick="openShareModal()">
-        📤 Share My Marks
-    </button>
-    </div>
-
-        <div class="card">
-            <h3>Grades</h3>
-            <p>Math: A<br>Science: B+</p>
+        <div id="view-grades" class="page-view" style="display:none;">
+            <div class="card">
+                <h3>📊 Grade Report</h3>
+                <table class="marks-table">
+                    <thead><tr><th>Subject</th><th>Marks</th></tr></thead>
+                    <tbody id="detailedMarksBody"></tbody>
+                </table>
+                <button class="share-btn" onclick="openShareModal()" style="margin-top: 20px;">📤 Share Results</button>
+            </div>
         </div>
-
     </div>
 </div>
-<div class="card follow-card">
-    <h3>❤️ Enjoying this website?</h3>
-    <p>Follow the developer for more cool projects!</p>
 
-    <div class="follow-buttons">
-        <a href="https://www.instagram.com/itsme_rupayanroy/" target="_blank">
-            📸 Instagram
-        </a>
-
-        <a href="https://github.com/RupayanRoy" target="_blank">
-            🐦 Github
-        </a>
-
-        <a href="https://www.linkedin.com/in/rupayan-roy-88b95130a/" target="_blank">
-            💼 LinkedIn
-        </a>
-    </div>
-</div>
-
-
-<!-- AUTH CHECK -->
-<script>
-const token = localStorage.getItem("token");
-
-if (!token) {
-    alert("Unauthorized access. Please login.");
-    window.location.href = "login.html";
-}
-</script>
-
-<!-- FETCH USER DATA ONCE -->
-<script>
-fetch("http://localhost:3000/api/me", {
-    headers: {
-        "Authorization": "Bearer " + localStorage.getItem("token")
-    }
-})
-.then(res => res.json())
-.then(user => {
-    // Profile
-    document.getElementById("profileInfo").innerHTML = `
-        <strong>Username:</strong> ${user.username}<br>
-        <strong>Role:</strong> ${user.role}
-    `;
-
-    // Marks
-    const list = document.getElementById("marksList");
-    list.innerHTML = "";
-    for (let subject in user.marks) {
-        const li = document.createElement("li");
-        li.textContent = `${subject.toUpperCase()}: ${user.marks[subject]}`;
-        list.appendChild(li);
-    }
-});
-</script>
-
-<!-- LOGOUT -->
-<script>
-function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    window.location.href = "login.html";
-}
-</script>
-<!-- Chatbot Button -->
-<div id="chatbot-btn" onclick="toggleChat()">💬</div>
-
-<!-- Chatbot Window -->
-<div id="chatbot">
-    <div class="chat-header">
-        AI Assistant
-        <span onclick="toggleChat()">✖</span>
-    </div>
-
-    <div class="chat-body" id="chatBody">
-        <div class="bot">👋 Hi! How can I help you?</div>
-    </div>
-
-    <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Ask me anything..." />
-        <button onclick="sendMessage()">Send</button>
-    </div>
-</div>
-<!-- SHARE MODAL -->
 <div id="shareModal" class="share-modal">
     <div class="share-box">
-        <h3>Share your marks</h3>
-
-        <button onclick="shareLinkedIn()">🔗 LinkedIn</button>
-        <button onclick="shareTwitter()">🐦 Twitter (X)</button>
-        <button onclick="shareInstagram()">📸 Instagram</button>
-
-        <br><br>
-        <button onclick="closeShareModal()">Cancel</button>
+        <h3>📤 Share My Marks</h3>
+        <div class="share-grid">
+            <button class="submit-btn" onclick="shareLinkedIn()" style="background:#0077b5;">🔗 LinkedIn</button>
+            <button class="submit-btn" onclick="shareTwitter()" style="background:#1da1f2;">🐦 Twitter</button>
+        </div>
+        <button class="cancel-btn" onclick="closeShareModal()">Close</button>
     </div>
 </div>
+
+<div id="chatbot-btn" onclick="toggleChat()">💬</div>
+<div id="chatbot">
+    <div style="background:#4a90e2; color:white; padding:15px; display:flex; justify-content:space-between;">
+        <span>🤖 SMS Assistant</span>
+        <span onclick="toggleChat()" style="cursor:pointer">✖</span>
+    </div>
+    <div id="chatBody" style="flex:1; padding:15px; overflow-y:auto;"></div>
+    <div style="padding:10px; border-top:1px solid #eee; display:flex;">
+        <input type="text" id="chatInput" placeholder="Ask AI..." style="flex:1; border:none;">
+        <button onclick="sendMessage()" style="border:none; color:#4a90e2; background:none;">Send</button>
+    </div>
+</div>
+
+<div class="credit-bar"><div class="credit-track"><span>🚀 Developed by <b>Rupayan Roy</b> | 🎨 Designed by <b>Monalisa Das</b></span></div></div>
 
 <script src="chatbot.js"></script>
 <script>
-function openShareModal() {
-    document.getElementById("shareModal").style.display = "flex";
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "login.html";
+
+// --- 1. INITIAL DATA FETCH ---
+fetch("http://localhost:3000/api/me", { headers: { "Authorization": "Bearer " + token } })
+.then(res => res.json())
+.then(user => {
+    document.getElementById("welcomeName").innerText = user.username;
+    document.getElementById("profileInfo").innerHTML = `<p><strong>User:</strong> ${user.username}</p><p><strong>Role:</strong> ${user.role}</p>`;
+
+    const tableBody = document.getElementById("detailedMarksBody");
+    tableBody.innerHTML = "";
+    for (let s in user.marks) {
+        tableBody.innerHTML += `<tr><td>${s.toUpperCase()}</td><td><strong>${user.marks[s] || 'N/A'}</strong></td></tr>`;
+    }
+    if(user.dynamicTimetable) startLiveTracker(user.dynamicTimetable);
+});
+
+// --- 2. AI TIMETABLE LOGIC ---
+async function uploadTimetable() {
+    const file = document.getElementById('timetableInput').files[0];
+    const status = document.getElementById('aiStatus');
+    if(!file) return alert("Select an image first!");
+    
+    const formData = new FormData();
+    formData.append('timetable', file);
+    status.innerText = "AI is reading your schedule... 🤖";
+
+    try {
+        const res = await fetch('http://localhost:3000/api/upload-timetable', {
+            method: 'POST', headers: { "Authorization": "Bearer " + token }, body: formData
+        });
+        const data = await res.json();
+        if(data.success) {
+            status.innerText = "✅ Schedule Updated!";
+            startLiveTracker(data.schedule);
+        }
+    } catch(e) { status.innerText = "❌ Upload failed."; }
 }
 
-function closeShareModal() {
-    document.getElementById("shareModal").style.display = "none";
+function startLiveTracker(schedule) {
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const today = days[new Date().getDay()];
+    const list = document.getElementById("courseList");
+    const alertBox = document.getElementById("liveClassAlert");
+
+    const todayClasses = schedule[today] || [];
+    list.innerHTML = todayClasses.map(c => `<li><strong>${c.time}:</strong> ${c.subject}</li>`).join('') || "<li>No classes today!</li>";
+
+    setInterval(() => {
+        const now = new Date();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
+        const next = todayClasses.find(c => {
+            const [h, m] = c.time.split('-')[0].split(':');
+            return (parseInt(h) * 60 + parseInt(m)) > currentTime;
+        });
+
+        if(next) {
+            const [h, m] = next.time.split('-')[0].split(':');
+            const diff = (parseInt(h) * 60 + parseInt(m)) - currentTime;
+            alertBox.style.display = "block";
+            alertBox.innerHTML = `<div class="ai-alert">Next: <strong>${next.subject}</strong> in <span class="countdown">${diff}m</span></div>`;
+        }
+    }, 10000);
+}
+
+// --- 3. CORE UI HELPERS ---
+function showPage(p, el) {
+    document.querySelectorAll('.page-view').forEach(v => v.style.display = 'none');
+    document.getElementById(p).style.display = 'block';
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function toggleChat() {
+    const c = document.getElementById("chatbot");
+    c.style.display = (c.style.display === "none" || c.style.display === "") ? "flex" : "none";
 }
 
 function getMarksText() {
-    const marks = document.querySelectorAll("#marksList li");
-    let text = "🎓 My Academic Performance:\n\n";
-
-    marks.forEach(m => {
-        text += m.innerText + "\n";
-    });
-
-    text += "\n#StudentLife #Results #HardWork";
-    return text;
+    let t = "🎓 Academic Update:\n";
+    document.querySelectorAll("#detailedMarksBody tr").forEach(r => t += `• ${r.cells[0].innerText}: ${r.cells[1].innerText}\n`);
+    return encodeURIComponent(t + "#StudentLife");
 }
+function openShareModal() { document.getElementById("shareModal").style.display = "flex"; }
+function closeShareModal() { document.getElementById("shareModal").style.display = "none"; }
+function shareLinkedIn() { window.open(`https://www.linkedin.com/sharing/share-offsite/?text=${getMarksText()}`, "_blank"); }
+function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=${getMarksText()}`, "_blank"); }
 
-function shareLinkedIn() {
-    const text = encodeURIComponent(getMarksText());
-    window.open(
-        `https://www.linkedin.com/sharing/share-offsite/?text=${text}`,
-        "_blank"
-    );
-}
+// --- 4. CLOUDINARY UPLOAD ---
+document.getElementById('uploadForm').onsubmit = function(e) {
+    e.preventDefault();
+    const status = document.getElementById('uploadStatus');
+    const bar = document.getElementById('progressBar');
+    const formData = new FormData();
+    formData.append('assignment', document.getElementById('assignmentInput').files[0]);
 
-function shareTwitter() {
-    const text = encodeURIComponent(getMarksText());
-    window.open(
-        `https://twitter.com/intent/tweet?text=${text}`,
-        "_blank"
-    );
-}
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:3000/api/upload-assignment', true);
+    xhr.setRequestHeader("Authorization", "Bearer " + token);
+    document.getElementById('progressContainer').style.display = 'block';
 
-function shareInstagram() {
-    const text = getMarksText();
-    navigator.clipboard.writeText(text);
-    alert("Text copied! Paste it in your Instagram post.");
-    window.open("https://www.instagram.com/", "_blank");
-}
+    xhr.upload.onprogress = (e) => bar.style.width = (e.loaded / e.total * 100) + '%';
+    xhr.onload = () => {
+        const r = JSON.parse(xhr.responseText);
+        status.innerHTML = xhr.status === 200 ? `✅ <a href="${r.url}" target="_blank">View File</a>` : "❌ Error";
+    };
+    xhr.send(formData);
+};
+
+function logout() { localStorage.clear(); window.location.href = "login.html"; }
 </script>
-<!-- Sliding Credit Footer -->
-<div class="credit-bar">
-  <div class="credit-track">
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das Roy</b>
-    &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;
-    👋 This website is developed by <b>Rupayan Roy</b> &nbsp;|&nbsp;
-    🎨 Designed by <b>Monalisa Das Roy</b>
-  </div>
-</div>
-
-
-</body>
-</html>
-
 </body>
 </html>

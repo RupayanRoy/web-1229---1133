@@ -7,5 +7,7 @@
 			"path": "../../../../sms-backend"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "web 1229 & 1133"
+	}
 }
